@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+:root {
+  --tf-blue: #007bff;
+  --tf-green: #28a745;
+  --tf-red: #dc3545;
+  --tf-yellow: #ffc107;
+  --tf-dark: #212529;
+  --tf-gray: #6c757d;
+  --tf-light: #f4f6f9;
+  --tf-radius: 0.6rem;
+}
+
+* {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background-color: var(--tf-light);
+  color: var(--tf-dark);
+}
+
+h1, h2, h3, h4, h5, h6, .fw-title {
+  font-weight: 700;
+}
+
+.btn {
+  border-radius: 50px;
+  font-weight: 500;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.btn-primary {
+  background-color: var(--tf-blue);
+  border-color: var(--tf-blue);
+}
+
+.btn-success {
+  background-color: var(--tf-green);
+  border-color: var(--tf-green);
+}
+
+.btn-danger {
+  background-color: var(--tf-red);
+  border-color: var(--tf-red);
+}
+
+.btn-warning {
+  background-color: var(--tf-yellow);
+  border-color: var(--tf-yellow);
+}
+
+.card {
+  border: none;
+  border-radius: var(--tf-radius);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.form-control, .form-select {
+  border-radius: 0.5rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--tf-blue);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.taskflow-brand {
+  font-weight: 700;
+  color: var(--tf-blue) !important;
+  letter-spacing: -0.5px;
+}
+
+.sidebar {
+  background-color: #ffffff;
+  min-height: calc(100vh - 56px);
+  border-right: 1px solid #e9ecef;
+}
+
+.sidebar .nav-link {
+  color: var(--tf-dark);
+  border-radius: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.sidebar .nav-link.active {
+  background-color: var(--tf-blue);
+  color: #fff;
+}
+
+.sidebar .nav-link:hover:not(.active) {
+  background-color: var(--tf-light);
+}
+
+.priority-basse { color: var(--tf-green); }
+.priority-moyenne { color: var(--tf-yellow); }
+.priority-haute { color: var(--tf-red); }
+
+.badge-priority-basse { background-color: var(--tf-green); }
+.badge-priority-moyenne { background-color: var(--tf-yellow); color: #212529; }
+.badge-priority-haute { background-color: var(--tf-red); }
+
+.badge-status-a_faire { background-color: var(--tf-gray); }
+.badge-status-en_cours { background-color: var(--tf-blue); }
+.badge-status-terminee { background-color: var(--tf-green); }
+
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--tf-blue) 0%, #0056b3 100%);
+}
+
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.stat-card {
+  border-radius: var(--tf-radius);
+  padding: 1.25rem;
+  color: #fff;
+}
+
+.toast-container {
+  z-index: 1080;
+}
