@@ -125,3 +125,9 @@ npm run build
 - Les tokens d'authentification (Sanctum) sont stockés côté client dans `localStorage` et transmis
   via l'en-tête `Authorization: Bearer <token>`.
 - CORS est configuré pour autoriser l'origine définie par `FRONTEND_URL` dans le `.env` du back-end.
+
+
+
+
+
+
