@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# Optimisations des caches Laravel
-php artisan config:cache
-php artisan route:cache
-#f
-# Exécution propre des migrations et des données de test
+# 1. On force la réinitialisation de la BDD et le seed immédiatement
 php artisan migrate:fresh --seed --force
 
-# Lancement officiel du serveur requis par Render
+# 2. On met en cache (optionnel)
+php artisan config:cache
+php artisan route:cache
+
+# 3. Lancement officiel du serveur requis par Render
 php artisan serve --host=0.0.0.0 --port=10000
