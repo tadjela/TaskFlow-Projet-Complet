@@ -3,7 +3,7 @@
 # Optimisations des caches Laravel
 php artisan config:cache
 php artisan route:cache
-
+#fr
 # Exécution propre des migrations et des données de test
 php artisan migrate:fresh --seed --force
 
