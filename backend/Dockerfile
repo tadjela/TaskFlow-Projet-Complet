@@ -26,9 +26,11 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Exposition du port requis par Render
 EXPOSE 10000
 
-# Commande de démarrage : Configuration des caches, exécution des migrations et lancement du serveur
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan migrate --force && \
-    php artisan db:seed --force && \
-    php artisan serve --host=0.0.0.0 --port=10000
+# Copier le script de déploiement
+COPY deploy.sh /usr/local/bin/deploy.sh
+
+# Donner les permissions d'exécution
+RUN chmod +x /usr/local/bin/deploy.sh
+
+# Commande de démarrage unique via le script
+CMD ["/usr/local/bin/deploy.sh"]
