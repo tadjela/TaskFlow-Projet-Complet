@@ -37,34 +37,33 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request)
-{
-    // Remplacer temporairement la vérification classique Auth::attempt
-    if ($request->email === 'demo@taskflow.test' && $request->password === 'password') {
-        
-        // On récupère ou on crée à la volée l'utilisateur démo
-        $user = \App\Models\User::firstOrCreate(
-            ['email' => 'demo@taskflow.test'],
-            [
-                'name' => 'Utilisateur Démo',
-                'password' => \Hash::make('password'),
-                'role' => 'user'
-            ]
-        );
+    {
+        // Compte de démonstration
+        if (
+            $request->email === 'demo@taskflow.test' &&
+            $request->password === 'password'
+        ) {
+            $user = User::firstOrCreate(
+                ['email' => 'demo@taskflow.test'],
+                [
+                    'name' => 'Utilisateur Démo',
+                    'password' => Hash::make('password'),
+                    'role' => 'user',
+                    'is_active' => true,
+                ]
+            );
+        } else {
+            // Authentification normale
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response()->json([
+                    'message' => 'Identifiants invalides.'
+                ], 401);
+            }
 
-        // On génère son jeton d'accès (Sanctum / Passport)
-        $token = $user->createToken('auth_token')->plainTextToken;
+            $user = Auth::user();
+        }
 
-        return response()->json([
-            'status' => 'success',
-            'user' => $user,
-            'token' => $token
-        ]);
-    }
-
-    // Garder votre ancien code en dessous pour les autres utilisateurs
-    // ...
-}
-        if (! $user->is_active) {
+        if (!$user->is_active) {
             return response()->json([
                 'message' => 'Ce compte a été désactivé.',
             ], 403);
@@ -84,11 +83,14 @@ class AuthController extends Controller
     public function logout()
     {
         $user = Auth::user();
+
         $user->currentAccessToken()->delete();
 
         ActivityLog::record($user->id, 'logout', 'Déconnexion.');
 
-        return response()->json(['message' => 'Déconnexion réussie.']);
+        return response()->json([
+            'message' => 'Déconnexion réussie.'
+        ]);
     }
 
     public function me()
@@ -99,12 +101,14 @@ class AuthController extends Controller
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::user();
+
         $user->fill($request->only(['name', 'email']));
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
+
             $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
@@ -122,16 +126,20 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        if (! Hash::check($request->current_password, $user->password)) {
+        if (!Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'message' => "L'ancien mot de passe est incorrect.",
             ], 422);
         }
 
-        $user->update(['password' => Hash::make($request->password)]);
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
 
         ActivityLog::record($user->id, 'update_password', 'Mot de passe modifié.');
 
-        return response()->json(['message' => 'Mot de passe modifié avec succès.']);
+        return response()->json([
+            'message' => 'Mot de passe modifié avec succès.'
+        ]);
     }
 }
