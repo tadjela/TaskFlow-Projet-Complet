@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
 
             Task::factory(12)->create([
                 'user_id' => $u->id,
-                'category_id' => fn() => fake()->boolean(80) ? $categories->random()->id : null,
+                // CORRECTION ICI : Utilisation de $this->faker au lieu de fake()
+                'category_id' => fn() => $this->faker->boolean(80) ? $categories->random()->id : null,
             ]);
         }
 
