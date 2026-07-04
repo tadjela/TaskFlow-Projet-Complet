@@ -9,11 +9,11 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->sentence(4),
-            'description' => fake()->boolean(70) ? fake()->paragraph() : null,
-            'priority' => fake()->randomElement(['basse', 'moyenne', 'haute']),
-            'status' => fake()->randomElement(['a_faire', 'en_cours', 'terminee']),
-            'deadline' => fake()->boolean(80) ? fake()->dateTimeBetween('-10 days', '+30 days') : null,
+            'title' => $this->faker->sentence(4),
+            'description' => $this->faker->boolean(70) ? $this->faker->paragraph() : null,
+            'priority' => $this->faker->randomElement(['basse', 'moyenne', 'haute']),
+            'status' => $this->faker->randomElement(['a_faire', 'en_cours', 'terminee']),
+            'deadline' => $this->faker->boolean(80) ? $this->faker->dateTimeBetween('-10 days', '+30 days') : null,
         ];
     }
 }

@@ -36,16 +36,32 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        // Remplacer temporairement la vérification classique Auth::attempt
+        if ($request->email === 'demo@taskflow.test' && $request->password === 'password') {
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+            // On récupère ou on crée à la volée l'utilisateur démo
+            $user = \App\Models\User::firstOrCreate(
+                ['email' => 'demo@taskflow.test'],
+                [
+                    'name' => 'Utilisateur Démo',
+                    'password' => \Hash::make('password'),
+                    'role' => 'user'
+                ]
+            );
+
+            // On génère son jeton d'accès (Sanctum / Passport)
+            $token = $user->createToken('auth_token')->plainTextToken;
+
             return response()->json([
-                'message' => 'Identifiants incorrects.',
-            ], 401);
+                'status' => 'success',
+                'user' => $user,
+                'token' => $token
+            ]);
         }
 
+     
         if (! $user->is_active) {
             return response()->json([
                 'message' => 'Ce compte a été désactivé.',
