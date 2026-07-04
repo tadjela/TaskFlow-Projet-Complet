@@ -2,39 +2,37 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::factory()->admin()->create([
-            'name' => 'Admin TaskFlow',
-            'email' => 'admin@taskflow.test',
-        ]);
+        // 1. Crée l'ADMIN uniquement s'il n'existe pas
+        User::firstOrCreate(
+            ['email' => 'admin@taskflow.test'],
+            [
+                'name' => 'Administrateur',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'is_active' => true,
+            ]
+        );
 
-        $user = User::factory()->create([
-            'name' => 'Utilisateur Démo',
-            'email' => 'demo@taskflow.test',
-        ]);
+        // 2. Crée le compte DEMO uniquement s'il n'existe pas
+        User::firstOrCreate(
+            ['email' => 'demo@taskflow.test'],
+            [
+                'name' => 'Utilisateur Démo',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'is_active' => true,
+            ]
+        );
 
-        User::factory(8)->create();
-
-        foreach (User::where('role', 'user')->get() as $u) {
-            $categories = Category::factory(3)->create(['user_id' => $u->id]);
-
-            Task::factory(12)->create([
-                'user_id' => $u->id,
-                'category_id' => fn() => fake()->boolean(80) ? $categories->random()->id : null,
-            ]);
-        }
-
-        $this->command->info('Comptes de démonstration :');
-        $this->command->info('  Admin : admin@taskflow.test / password');
-        $this->command->info('  User  : demo@taskflow.test / password');
+        // 3. Génère 10 utilisateurs aléatoires via la factory
+        User::factory(10)->create();
     }
 }
