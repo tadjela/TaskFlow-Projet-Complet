@@ -8,9 +8,10 @@ class CategoryFactory extends Factory
 {
     public function definition(): array
     {
+        $categories = ['Développement', 'Design', 'Marketing', 'Bug Fix', 'Infrastructure', 'Réunion'];
+
         return [
-            'name' => $this->faker->randomElement(['Travail', 'Personnel', 'Études', 'Santé', 'Projets']) . ' ' . $this->faker->unique()->randomNumber(5),
-            'color' => $this->faker->randomElement(['#007BFF', '#28A745', '#DC3545', '#FFC107']),
+            'name' => $categories[array_rand($categories)] . ' ' . uniqid(),
         ];
     }
 }
