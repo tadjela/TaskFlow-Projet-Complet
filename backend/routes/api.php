@@ -34,3 +34,25 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/logs', [LogController::class, 'index']);
     });
 });
+
+
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/run-seeder', function () {
+    try {
+        // Force l'exécution du seeder sur le serveur
+        Artisan::call('db:seed', ['--force' => true]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Les seeders ont été exécutés avec succès !',
+            'output' => Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Erreur lors du seeding.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+});
