@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Models\ActivityLog;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -36,39 +37,48 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
-        // Compte de démonstration
-        if (
-            $request->email === 'demo@taskflow.test' &&
-            $request->password === 'password'
-        ) {
+        // 1. Gestion des comptes de test (Admin et Démo)
+        if ($request->email === 'admin@taskflow.test' && $request->password === 'password') {
+
+            $user = User::firstOrCreate(
+                ['email' => 'admin@taskflow.test'],
+                [
+                    'name' => 'Administrateur',
+                    'password' => Hash::make('password'),
+                    'role' => 'admin',
+                ]
+            );
+        } elseif ($request->email === 'demo@taskflow.test' && $request->password === 'password') {
+
             $user = User::firstOrCreate(
                 ['email' => 'demo@taskflow.test'],
                 [
                     'name' => 'Utilisateur Démo',
                     'password' => Hash::make('password'),
                     'role' => 'user',
-                    'is_active' => true,
                 ]
             );
         } else {
-            // Authentification normale
-            if (!Auth::attempt($request->only('email', 'password'))) {
+            // 2. Authentification classique pour les autres utilisateurs en base de données
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
-                    'message' => 'Identifiants invalides.'
+                    'message' => 'Identifiants incorrects.',
                 ], 401);
             }
-
-            $user = Auth::user();
         }
 
+        // 3. Vérification commune du statut du compte (Actif / Inactif)
         if (!$user->is_active) {
             return response()->json([
                 'message' => 'Ce compte a été désactivé.',
             ], 403);
         }
 
+        // 4. Génération du jeton et journalisation de l'activité
         $token = $user->createToken('taskflow')->plainTextToken;
 
         ActivityLog::record($user->id, 'login', 'Connexion réussie.');
@@ -83,14 +93,11 @@ class AuthController extends Controller
     public function logout()
     {
         $user = Auth::user();
-
         $user->currentAccessToken()->delete();
 
         ActivityLog::record($user->id, 'logout', 'Déconnexion.');
 
-        return response()->json([
-            'message' => 'Déconnexion réussie.'
-        ]);
+        return response()->json(['message' => 'Déconnexion réussie.']);
     }
 
     public function me()
@@ -101,14 +108,12 @@ class AuthController extends Controller
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::user();
-
         $user->fill($request->only(['name', 'email']));
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
-
             $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
@@ -126,20 +131,16 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return response()->json([
                 'message' => "L'ancien mot de passe est incorrect.",
             ], 422);
         }
 
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
+        $user->update(['password' => Hash::make($request->password)]);
 
         ActivityLog::record($user->id, 'update_password', 'Mot de passe modifié.');
 
-        return response()->json([
-            'message' => 'Mot de passe modifié avec succès.'
-        ]);
+        return response()->json(['message' => 'Mot de passe modifié avec succès.']);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
@@ -28,8 +29,7 @@ class DatabaseSeeder extends Seeder
 
             Task::factory(12)->create([
                 'user_id' => $u->id,
-                // CORRECTION ICI : Utilisation de $this->faker au lieu de fake()
-                'category_id' => fn() => $this->faker->boolean(80) ? $categories->random()->id : null,
+                'category_id' => fn() => fake()->boolean(80) ? $categories->random()->id : null,
             ]);
         }
 
