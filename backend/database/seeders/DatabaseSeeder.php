@@ -35,8 +35,8 @@ class DatabaseSeeder extends Seeder
         );
 
         // 3. Génère 10 utilisateurs aléatoires via la factory
-        User::factory(10)->create();
-        Task::factory(10)->create();
-        Category::factory(10)->create();
+        User::factory(15)->create();
+        Task::factory(25)->create();
+        Category::factory(130)->create();
     }
 }
