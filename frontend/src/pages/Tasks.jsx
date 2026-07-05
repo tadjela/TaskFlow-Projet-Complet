@@ -78,47 +78,76 @@ export default function Tasks() {
   }
 
   return (
-    <div>
+    
+    <div className="container-fluid px-3 overflow-hidden">
+
+
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <h2 className="fw-title mb-0">Mes tâches</h2>
-        <Link to="/tasks/new" className="btn btn-primary d-flex align-items-center gap-2">
+        <h2 className="fw-bold mb-0">Mes tâches</h2>
+        <Link
+          to="/tasks/new"
+          className="btn btn-primary d-flex align-items-center gap-2 flex-shrink-0"
+        >
           <FiPlus /> Nouvelle tâche
         </Link>
       </div>
 
-      <div className="card mb-4">
-        <div className="card-body">
+    
+      <div className="card mb-4 w-100">
+        <div className="card-body px-2 px-md-3">
           <div className="row g-2">
-            <div className="col-md-4">
+
+          
+            <div className="col-12 col-md-4">
               <SearchBar value={filters.search} onChange={(v) => updateFilter('search', v)} />
             </div>
-            <div className="col-md-2">
-              <select className="form-select" value={filters.status} onChange={(e) => updateFilter('status', e.target.value)}>
+
+            
+            <div className="col-6 col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={filters.status}
+                onChange={(e) => updateFilter('status', e.target.value)}
+              >
                 <option value="">Tous les statuts</option>
                 <option value="a_faire">À faire</option>
                 <option value="en_cours">En cours</option>
                 <option value="terminee">Terminée</option>
               </select>
             </div>
-            <div className="col-md-2">
-              <select className="form-select" value={filters.priority} onChange={(e) => updateFilter('priority', e.target.value)}>
+
+            {/* Priorité */}
+            <div className="col-6 col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={filters.priority}
+                onChange={(e) => updateFilter('priority', e.target.value)}
+              >
                 <option value="">Toute priorité</option>
                 <option value="basse">Basse</option>
                 <option value="moyenne">Moyenne</option>
                 <option value="haute">Haute</option>
               </select>
             </div>
-            <div className="col-md-2">
-              <select className="form-select" value={filters.category_id} onChange={(e) => updateFilter('category_id', e.target.value)}>
+
+            {/* Catégorie */}
+            <div className="col-6 col-md-2">
+              <select
+                className="form-select form-select-sm"
+                value={filters.category_id}
+                onChange={(e) => updateFilter('category_id', e.target.value)}
+              >
                 <option value="">Toute catégorie</option>
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
             </div>
-            <div className="col-md-2">
+
+            {/* Tri */}
+            <div className="col-6 col-md-2">
               <select
-                className="form-select"
+                className="form-select form-select-sm"
                 value={`${filters.sort_by}:${filters.sort_dir}`}
                 onChange={(e) => {
                   const [sort_by, sort_dir] = e.target.value.split(':')
@@ -131,10 +160,12 @@ export default function Tasks() {
                 <option value="title:asc">Titre (A-Z)</option>
               </select>
             </div>
+
           </div>
         </div>
       </div>
 
+  
       {loading ? (
         <Loading />
       ) : tasks.length === 0 ? (
