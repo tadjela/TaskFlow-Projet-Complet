@@ -78,34 +78,33 @@ export default function Tasks() {
   }
 
   return (
-    
-    <div className="container-fluid px-3 overflow-hidden">
-
-
-      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div className="container-fluid px-2 px-sm-3 overflow-hidden">
+      
+      {/* En-tête fluide mobile-first */}
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
         <h2 className="fw-bold mb-0">Mes tâches</h2>
         <Link
           to="/tasks/new"
-          className="btn btn-primary d-flex align-items-center gap-2 flex-shrink-0"
+          className="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto flex-shrink-0"
         >
           <FiPlus /> Nouvelle tâche
         </Link>
       </div>
 
-    
-      <div className="card mb-4 w-100">
-        <div className="card-body px-2 px-md-3">
-          <div className="row g-2">
+      {/* Barre de filtres adaptative */}
+      <div className="card mb-4 w-100 shadow-sm">
+        <div className="card-body px-2 px-sm-3">
+          <div className="row g-2 align-items-center">
 
-          
-            <div className="col-12 col-md-4">
+            {/* Recherche : Pleine largeur sur mobile, 1/3 sur grand écran */}
+            <div className="col-12 col-lg-4">
               <SearchBar value={filters.search} onChange={(v) => updateFilter('search', v)} />
             </div>
 
-            
-            <div className="col-6 col-md-2">
+            {/* Statuts : 2 par ligne sur petit mobile, 4 sur tablette */}
+            <div className="col-6 col-sm-4 col-lg-2">
               <select
-                className="form-select form-select-sm"
+                className="form-select form-select-sm py-2"
                 value={filters.status}
                 onChange={(e) => updateFilter('status', e.target.value)}
               >
@@ -117,9 +116,9 @@ export default function Tasks() {
             </div>
 
             {/* Priorité */}
-            <div className="col-6 col-md-2">
+            <div className="col-6 col-sm-4 col-lg-2">
               <select
-                className="form-select form-select-sm"
+                className="form-select form-select-sm py-2"
                 value={filters.priority}
                 onChange={(e) => updateFilter('priority', e.target.value)}
               >
@@ -131,9 +130,9 @@ export default function Tasks() {
             </div>
 
             {/* Catégorie */}
-            <div className="col-6 col-md-2">
+            <div className="col-6 col-sm-4 col-lg-2">
               <select
-                className="form-select form-select-sm"
+                className="form-select form-select-sm py-2"
                 value={filters.category_id}
                 onChange={(e) => updateFilter('category_id', e.target.value)}
               >
@@ -145,9 +144,9 @@ export default function Tasks() {
             </div>
 
             {/* Tri */}
-            <div className="col-6 col-md-2">
+            <div className="col-6 col-sm-12 col-lg-2">
               <select
-                className="form-select form-select-sm"
+                className="form-select form-select-sm py-2"
                 value={`${filters.sort_by}:${filters.sort_dir}`}
                 onChange={(e) => {
                   const [sort_by, sort_dir] = e.target.value.split(':')
@@ -165,16 +164,16 @@ export default function Tasks() {
         </div>
       </div>
 
-  
+      {/* Section des tâches */}
       {loading ? (
         <Loading />
       ) : tasks.length === 0 ? (
-        <div className="text-center text-muted py-5">
+        <div className="text-center text-muted py-5 px-3">
           <p className="mb-3">Aucune tâche ne correspond à ces critères.</p>
-          <Link to="/tasks/new" className="btn btn-primary">Créer une tâche</Link>
+          <Link to="/tasks/new" className="btn btn-primary w-100 w-sm-auto">Créer une tâche</Link>
         </div>
       ) : (
-        <>
+        <div className="d-flex flex-column gap-3 w-100">
           {tasks.map((task) => (
             <TaskCard
               key={task.id}
@@ -183,8 +182,10 @@ export default function Tasks() {
               onStatusChange={handleStatusChange}
             />
           ))}
-          <Pagination meta={meta} onPageChange={(page) => updateFilter('page', page)} />
-        </>
+          <div className="d-flex justify-content-center mt-3 overflow-auto">
+            <Pagination meta={meta} onPageChange={(page) => updateFilter('page', page)} />
+          </div>
+        </div>
       )}
 
       <ModalDelete
