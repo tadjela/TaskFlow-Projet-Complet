@@ -139,3 +139,30 @@ h1, h2, h3, h4, h5, h6, .fw-title {
 .toast-container {
   z-index: 1080;
 }
+
+.card {
+  width: 100%;
+}
+
+.card-body {
+  overflow: hidden;
+}
+
+.text-break {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.badge {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .btn {
+    min-width: 42px;
+  }
+}
