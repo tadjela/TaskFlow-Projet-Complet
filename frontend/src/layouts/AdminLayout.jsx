@@ -31,13 +31,13 @@ export default function AdminLayout() {
           </nav>
         </aside>
 
-        <main className="flex-grow-1 p-3 p-md-4">
+        <main className="flex-grow-1 p-3 p-md-4 w-100" style={{overflow:'hidden'}}>
           <Outlet />
         </main>
       </div>
 
-      <nav className="navbar navbar-light bg-white border-top fixed-bottom d-md-none py-2 px-1 shadow-sm">
-        <div className="container-fluid justify-content-around">
+      <nav className="navbar navbar-light bg-white border-top fixed-bottom d-md-none py-2 px-1 shadow-sm w-100" style={{left:0, right:0}}>
+        <div className="container-fluid justify-content-around px-0">
           {links.map(({ to, icon: Icon, end }) => (
             <NavLink
               key={to}
