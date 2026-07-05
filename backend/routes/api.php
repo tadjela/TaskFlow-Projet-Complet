@@ -34,20 +34,3 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/logs', [LogController::class, 'index']);
     });
 });
-
-use Illuminate\Support\Facades\Artisan;
-
-Route::get('/run-seeder', function () {
-    try {
-        Artisan::call('db:seed', ['--force' => true]);
-        return response()->json([
-            'status' => 'success',
-            'message' => Artisan::output()
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage()
-        ], 500);
-    }
-});
